@@ -1,0 +1,11 @@
+ecommerce_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      keyfile: /opt/airflow/ecommerce-e2e-458713-0ee65e15ab5c.json
+      project: ecommerce-e2e-458713
+      dataset: ecommerce_raw
+      threads: 4
+      timeout_seconds: 300

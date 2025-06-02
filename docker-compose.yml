@@ -1,0 +1,65 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+
+  airflow-webserver:
+    build: .
+    image: apache/airflow:2.5.1-python3.10
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./plugins:/opt/airflow/plugins
+      - ./ecommerce_dbt/ecommerce_dbt:/opt/airflow/ecommerce_dbt
+      - /etc/localtime:/etc/localtime:ro
+      - ./logs:/opt/airflow/logs
+      - ./requirements.txt:/requirements.txt
+      - ./ecommerce-e2e-458713-0ee65e15ab5c.json:/opt/airflow/ecommerce-e2e-458713-0ee65e15ab5c.json
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      PATH: /home/airflow/.local/bin:/opt/airflow/.local/bin:/usr/local/bin:/usr/bin:/bin
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'Wvbso8HvrKLqXNjx-KSeu2IZY7PqkOGn8btryul_t5M='
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/airflow/ecommerce-e2e-458713-0ee65e15ab5c.json
+      
+    ports:
+      - "8080:8080"
+    command: >
+       bash -c "pip install --no-cache-dir -r /requirements.txt && airflow db upgrade && airflow webserver "
+    
+  airflow-scheduler:
+    image: apache/airflow:2.5.1-python3.10
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./logs:/opt/airflow/logs
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./plugins:/opt/airflow/plugins
+      - ./ecommerce_dbt/ecommerce_dbt:/opt/airflow/ecommerce_dbt
+      - /etc/localtime:/etc/localtime:ro
+      - ./requirements.txt:/requirements.txt
+      - ./ecommerce-e2e-458713-0ee65e15ab5c.json:/opt/airflow/ecommerce-e2e-458713-0ee65e15ab5c.json
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/airflow/ecommerce-e2e-458713-0ee65e15ab5c.json
+      PATH: /home/airflow/.local/bin:/opt/airflow/.local/bin:/usr/local/bin:/usr/bin:/bin
+    
+    command:  >
+      bash -c "pip install --no-cache-dir -r /requirements.txt && airflow scheduler"
+
+volumes:
+  postgres_data:

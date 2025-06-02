@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: dim_products
+    description: "Product dimension table with sales and inventory metrics"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+      - name: return_rate
+        description: "Percentage of orders containing this product that were returned"
+              
+      - name: sales_status
+        tests:
+          - accepted_values:
+              values: ['Never Sold', 'Recently Sold', 'Warm', 'Cold']
+      - name: fact_orders_product_id  
+        tests:
+          - relationships:
+              to: ref('fact_orders')
+              field: product_id
+              severity: warn
+
+  - name: fact_orders
+    description: "Order fact table with financial metrics"
+    columns:
+      - name: order_item_id
+        tests:
+          - unique
+          - not_null
+      - name: gross_profit
+        description: "Total price minus cost of goods sold"
+        tests:
+          - not_null
+
+  - name: dim_customers
+    description: "Customer dimension table enriched with behavioral segments and lifetime metrics"
+    columns:
+      - name: customer_id
+        description: "Unique identifier for the customer"
+        tests:
+          - unique
+          - not_null
+      - name: purchase_frequency_segment
+        description: "Classification based on number of purchases"
+        tests:
+          - accepted_values:
+              values: ['New', 'One-Time', 'Repeat', 'Loyal']

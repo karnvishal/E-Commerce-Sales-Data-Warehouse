@@ -1,0 +1,137 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: ecommerce_raw
+    tables:
+      - name: orders
+        description: "Raw order data from e-commerce platform"
+        columns:
+          - name: order_id
+            description: "Unique identifier for the order"
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            description: "ID of the customer (nullable for guests)"
+          - name: order_date
+            description: "When the order was placed"
+            tests:
+              - not_null
+          - name: status
+            description: "Order status"
+            tests:
+              - accepted_values:
+                  values: ['completed', 'processing', 'cancelled', 'returned']
+
+      - name: products
+        description: "Product catalog data"
+        columns:
+          - name: product_id
+            tests:
+              - unique
+              - not_null
+          - name: category
+            tests:
+              - accepted_values:
+                  values: ['Electronics', 'Clothing', 'Home', 'Books', 'Beauty']
+
+      - name: inventory_movements 
+        description: "Raw inventory movement records"
+        columns:
+          - name: movement_id
+            tests:
+              - unique
+              - not_null
+          - name: product_id
+            tests:
+              - not_null
+          - name: movement_date
+            tests:
+              - not_null
+          - name: quantity
+            tests:
+              - not_null
+          - name: movement_type
+            tests:
+              - accepted_values:
+                  values: ['purchase', 'sale', 'return', 'adjustment']
+
+      - name: customers
+        description: "Raw customer data"
+        columns:
+          - name: customer_id
+            tests:
+              - unique
+              - not_null
+          - name: first_name
+          - name: last_name
+          - name: email
+            tests:
+              - not_null
+          - name: join_date
+            tests:
+              - not_null
+
+      - name: order_items
+        description: "Raw order items data from e-commerce platform"
+        columns:
+          - name: order_item_id
+            description: "Unique identifier for the order item"
+            tests:
+              - not_null
+          - name: order_id
+            description: "ID of the order"
+            tests:
+              - not_null
+          - name: product_id
+            description: "ID of the product"
+            tests:
+              - not_null
+          - name: quantity
+            description: "Quantity of the product ordered"
+            tests:
+              - not_null
+          - name: unit_price
+            description: "Price per unit of the product"
+          - name: discount_pct
+            description: "Discount percentage applied"
+          - name: total_price
+            description: "Final price after discount"
+          - name: return_status
+            description: "Indicates if the item was returned"
+          - name: return_reason
+            description: "Reason for the return, if any"
+
+models:
+  - name: stg_orders
+    description: "Cleaned order data with standardized fields"
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: order_status
+        tests:
+          - accepted_values:
+              values: ['completed', 'processing', 'cancelled', 'returned']
+
+  - name: stg_order_items
+    description: "Cleaned order items data from the raw order_items table"
+    columns:
+      - name: order_item_id
+        description: "Unique identifier for the order item"
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: "ID of the order to which this item belongs"
+        tests:
+          - not_null
+      - name: product_id
+        description: "ID of the product in the order item"
+        tests:
+          - not_null
+
+
+  
