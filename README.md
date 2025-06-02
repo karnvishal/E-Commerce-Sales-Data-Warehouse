@@ -110,7 +110,7 @@ eCommerce businesses face critical challenges in data-driven decision making:
 - Customer lifecycle segmentation (Champion/Loyal/At Risk/Can't Lose)
 - Projected annual value calculations
 
-![Lineage Diagram](https://github.com/karnvishal/E-Commerce-Sales-Data-Warehouse/main/images/lineage.png?raw=true)
+![Lineage Diagram](https://github.com/karnvishal/E-Commerce-Sales-Data-Warehouse/blob/main/images/lineage.png?raw=true)
 
 ### dbt Configuration Highlights
 
@@ -146,7 +146,7 @@ graph TD
     G --> H[Pipeline Complete]
 ```
 
-![Airflow Diagram](https://github.com/karnvishal/E-Commerce-Sales-Data-Warehouse/main/images/airflow_dag.png?raw=true)
+![Airflow Diagram](https://github.com/karnvishal/E-Commerce-Sales-Data-Warehouse/blob/main/images/airflow_dag.png?raw=true)
 
 ### Airflow Features
 - **Automatic Retry Logic** - 5-minute intervals for failed tasks
@@ -154,13 +154,13 @@ graph TD
 - **Environment Management** - Secure credential handling
 - **Comprehensive Logging** - Detailed monitoring and debugging
 
-![Airflow Task-status Diagram](https://github.com/karnvishal/E-Commerce-Sales-Data-Warehouse/main/images/airflow_status.png?raw=true)
+![Airflow Task-status Diagram](https://github.com/karnvishal/E-Commerce-Sales-Data-Warehouse/blob/main/images/airflow_status.png?raw=true)
 
 ## 📈 Business Intelligence
 
 ### Looker Studio Dashboard
 
-![Looker Studio Diagram](https://github.com/karnvishal/E-Commerce-Sales-Data-Warehouse/main/images/dashboard.png?raw=true)
+![Looker Studio Diagram](https://github.com/karnvishal/E-Commerce-Sales-Data-Warehouse/blob/main/images/dashboard.png?raw=true)
 
 #### Customer Analytics
 - **Top Performers** - Top 10 customers by lifetime value
